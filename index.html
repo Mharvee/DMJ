@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EstatePro — Buy, Rent & Sell Property</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy: #0B1F3A;
+      --navy2: #132944;
+      --navy3: #1A3558;
+      --gold: #C9A84C;
+      --gold2: #E8C878;
+      --white: #FFFFFF;
+      --offwhite: #F7F8FA;
+      --light: #EEF1F5;
+      --text: #0B1F3A;
+      --muted: #6B7A8D;
+      --border: #D8E0EA;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--navy);
+      padding: 0 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--white); letter-spacing: 0.5px; }
+    .logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a { color: #C0CCDA; font-size: 14px; font-weight: 400; transition: color 0.2s; letter-spacing: 0.3px; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--gold) !important;
+      color: var(--navy) !important;
+      padding: 9px 20px;
+      border-radius: 6px;
+      font-weight: 500 !important;
+      font-size: 13px !important;
+      letter-spacing: 0.5px;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--gold2) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      padding: 5rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 50px;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+      font-weight: 700;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero p {
+      color: #8FA3B8;
+      font-size: 16px;
+      line-height: 1.75;
+      max-width: 420px;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 13px 28px;
+      border-radius: 7px;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary:hover { background: var(--gold2); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      padding: 13px 28px;
+      border-radius: 7px;
+      font-weight: 400;
+      font-size: 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: border-color 0.2s;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.5); }
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--white); font-weight: 600; }
+    .stat-lbl { font-size: 12px; color: #6B8499; margin-top: 3px; font-weight: 300; }
+
+    /* Hero property cards */
+    .hero-visual { display: flex; flex-direction: column; gap: 12px; }
+    .prop-card-mini {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: border-color 0.2s;
+    }
+    .prop-card-mini:hover { border-color: rgba(201,168,76,0.35); }
+    .prop-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .t1 { background: rgba(201,168,76,0.15); }
+    .t2 { background: rgba(26,53,88,0.8); }
+    .t3 { background: rgba(201,168,76,0.1); }
+    .prop-info { flex: 1; }
+    .prop-name { font-size: 14px; color: var(--white); font-weight: 500; margin-bottom: 3px; }
+    .prop-loc { font-size: 12px; color: #6B8499; }
+    .prop-price { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--gold); font-weight: 600; }
+    .prop-badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 500; letter-spacing: 0.5px; }
+    .badge-rent { background: rgba(26,53,88,0.8); color: #7AADD4; }
+    .badge-sale { background: rgba(201,168,76,0.15); color: var(--gold); }
+
+    /* ── SEARCH ── */
+    .search-section {
+      background: var(--offwhite);
+      padding: 1.75rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .search-tabs { max-width: 920px; margin: 0 auto 0.75rem; display: flex; }
+    .tab {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+    .search-bar {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(11,31,58,0.07);
+    }
+    .search-seg {
+      flex: 1;
+      padding: 14px 20px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .search-seg:last-of-type { border-right: none; }
+    .seg-label { font-size: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .seg-input {
+      font-size: 14px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      background: transparent;
+      border: none;
+      outline: none;
+      width: 100%;
+      font-weight: 400;
+    }
+    .seg-input::placeholder { color: #B0BBC8; }
+    .search-btn {
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      padding: 0 28px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: background 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .search-btn:hover { background: var(--navy3); }
+
+    /* ── SECTIONS ── */
+    .section { padding: 3.5rem 3rem; max-width: 1100px; margin: 0 auto; }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2rem; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: var(--navy); }
+    .section-link { font-size: 13px; color: var(--gold); font-weight: 500; letter-spacing: 0.5px; cursor: pointer; transition: opacity 0.2s; }
+    .section-link:hover { opacity: 0.75; }
+
+    /* ── FEATURED LISTINGS ── */
+    .featured-bg { background: var(--offwhite); padding-bottom: 3.5rem; }
+    .props-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .prop-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s;
+      cursor: pointer;
+    }
+    .prop-card:hover { box-shadow: 0 8px 32px rgba(11,31,58,0.11); transform: translateY(-3px); }
+    .prop-img {
+      height: 185px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      position: relative;
+    }
+    .pi1 { background: linear-gradient(135deg, #1A3558 0%, #0B1F3A 100%); }
+    .pi2 { background: linear-gradient(135deg, #2C4A6E 0%, #1A3558 100%); }
+    .pi3 { background: linear-gradient(135deg, #132944 0%, #0F2035 100%); }
+    .pi4 { background: linear-gradient(135deg, #1E3E60 0%, #0D2438 100%); }
+    .pi5 { background: linear-gradient(135deg, #243F5E 0%, #112030 100%); }
+    .pi6 { background: linear-gradient(135deg, #162E4A 0%, #0A1B2C 100%); }
+    .prop-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .tag-sale { background: var(--gold); color: var(--navy); }
+    .tag-rent { background: rgba(255,255,255,0.15); color: var(--white); }
+    .tag-new { background: #2A7D4F; color: #fff; }
+    .prop-body { padding: 1.25rem; }
+    .prop-price-big { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--navy); font-weight: 700; margin-bottom: 5px; }
+    .prop-title { font-size: 14px; color: var(--text); font-weight: 500; margin-bottom: 4px; }
+    .prop-address { font-size: 12px; color: var(--muted); margin-bottom: 1rem; }
+    .prop-features { display: flex; gap: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .feat { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+
+    /* ── SERVICES ── */
+    .services-section { background: var(--navy); padding: 3.5rem 3rem; }
+    .services-inner { max-width: 1100px; margin: 0 auto; }
+    .services-section .section-title { color: var(--white); }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+    .svc-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: border-color 0.2s;
+    }
+    .svc-card:hover { border-color: rgba(201,168,76,0.35); }
+    .svc-icon {
+      width: 46px;
+      height: 46px;
+      background: rgba(201,168,76,0.12);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 1rem;
+    }
+    .svc-title { font-size: 16px; font-weight: 500; color: var(--white); margin-bottom: 8px; }
+    .svc-desc { font-size: 13px; color: #7A90A6; line-height: 1.7; font-weight: 300; }
+
+    /* ── WHY CHOOSE US ── */
+    .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .why-card {
+      text-align: center;
+      padding: 2rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: box-shadow 0.2s;
+    }
+    .why-card:hover { box-shadow: 0 4px 20px rgba(11,31,58,0.07); }
+    .why-icon { font-size: 32px; margin-bottom: 1rem; }
+    .why-title { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+    .why-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* ── AGENTS ── */
+    .agents-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .agent-card {
+      text-align: center;
+      padding: 1.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: box-shadow 0.2s;
+    }
+    .agent-card:hover { box-shadow: 0 4px 20px rgba(11,31,58,0.08); }
+    .agent-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--navy);
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+    }
+    .agent-name { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 3px; }
+    .agent-role { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .agent-count { font-size: 12px; color: var(--gold); font-weight: 500; }
+    .agent-btn {
+      margin-top: 12px;
+      display: inline-block;
+      font-size: 12px;
+      color: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      background: none;
+      font-weight: 500;
+    }
+    .agent-btn:hover { background: var(--offwhite); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section { background: var(--offwhite); padding: 3.5rem 3rem; }
+    .testimonials-inner { max-width: 1100px; margin: 0 auto; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .stars { color: var(--gold); font-size: 14px; margin-bottom: 0.75rem; letter-spacing: 1px; }
+    .testimonial-text { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 10px; }
+    .author-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      flex-shrink: 0;
+    }
+    .author-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+    .author-detail { font-size: 11px; color: var(--muted); }
+
+    /* ── CTA BANNER ── */
+    .cta-wrapper { padding: 0 3rem 3.5rem; background: var(--white); }
+    .cta-banner {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--navy);
+      border-radius: 14px;
+      padding: 3rem 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.06);
+      pointer-events: none;
+    }
+    .cta-banner::after {
+      content: '';
+      position: absolute;
+      left: 40%;
+      bottom: -50px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.04);
+      pointer-events: none;
+    }
+    .cta-h { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--white); font-weight: 700; margin-bottom: 8px; }
+    .cta-p { font-size: 14px; color: #7A90A6; font-weight: 300; max-width: 400px; line-height: 1.6; }
+    .cta-btns { display: flex; gap: 1rem; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.06); padding: 3rem; }
+    .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+    .footer-brand .logo { display: block; margin-bottom: 1rem; }
+    .footer-tagline { font-size: 13px; color: #6B8499; line-height: 1.65; max-width: 240px; font-weight: 300; }
+    .footer-col-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #8FA3B8; margin-bottom: 1rem; }
+    .footer-col a { display: block; font-size: 13px; color: #6B8499; margin-bottom: 8px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; gap: 1rem; }
+    .footer-copy { font-size: 12px; color: #4A5B6D; }
+    .footer-social { display: flex; gap: 0.75rem; }
+    .social-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #8FA3B8;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      background: none;
+    }
+    .social-btn:hover { border-color: rgba(201,168,76,0.5); color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { gap: 1.25rem; }
+      .hero { padding: 3.5rem 1.5rem; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero h1 { font-size: 36px; }
+      .hero-visual { display: none; }
+      .search-section { padding: 1.5rem; }
+      .search-bar { flex-direction: column; border-radius: 10px; }
+      .search-seg { border-right: none; border-bottom: 1px solid var(--border); }
+      .search-btn { border-radius: 0 0 10px 10px; padding: 14px; justify-content: center; }
+      .section { padding: 2.5rem 1.5rem; }
+      .props-grid { grid-template-columns: 1fr; }
+      .services-section { padding: 2.5rem 1.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+      .agents-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .testimonials-section { padding: 2.5rem 1.5rem; }
+      .cta-wrapper { padding: 0 1.5rem 2.5rem; }
+      .cta-banner { flex-direction: column; align-items: flex-start; padding: 2rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .nav-links a:not(.nav-cta):not(:last-child) { display: none; }
+      .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+      .why-grid { grid-template-columns: 1fr; }
+      .agents-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="logo">Estate<span>Pro</span></div>
+  <div class="nav-links">
+    <a href="#listings">Buy</a>
+    <a href="#listings">Rent</a>
+    <a href="#cta">Sell</a>
+    <a href="#listings">New Homes</a>
+    <a href="#agents">Agents</a>
+    <a href="#cta" class="nav-cta">List Property</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-label">Premium Real Estate</div>
+      <h1>Find Your <em>Perfect</em> Place to Call Home</h1>
+      <p>Explore thousands of verified listings — from city apartments to suburban family homes. Buy, rent, or sell with total confidence.</p>
+      <div class="hero-btns">
+        <a href="#listings"><button class="btn-primary">Browse Listings</button></a>
+        <a href="#cta"><button class="btn-secondary">Sell My Property</button></a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">12,400+</div>
+          <div class="stat-lbl">Active Listings</div>
+        </div>
+        <div>
+          <div class="stat-num">8,200+</div>
+          <div class="stat-lbl">Happy Clients</div>
+        </div>
+        <div>
+          <div class="stat-num">98%</div>
+          <div class="stat-lbl">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="prop-card-mini">
+        <div class="prop-thumb t1">🏡</div>
+        <div class="prop-info">
+          <div class="prop-name">Greenview Estate, Ikoyi</div>
+          <div class="prop-loc">Lagos Island · 4 bed · 3 bath</div>
+        </div>
+        <div>
+          <div class="prop-price">₦95M</div>
+          <div style="margin-top:4px"><span class="prop-badge badge-sale">For Sale</span></div>
+        </div>
+      </div>
+      <div class="prop-card-mini">
+        <div class="prop-thumb t2">🏢</div>
+        <div class="prop-info">
+          <div class="prop-name">Skyline Apartments, VI</div>
+          <div class="prop-loc">Victoria Island · 2 bed · 2 bath</div>
+        </div>
+        <div>
+          <div class="prop-price">₦350K/mo</div>
+          <div style="margin-top:4px"><span class="prop-badge badge-rent">For Rent</span></div>
+        </div>
+      </div>
+      <div class="prop-card-mini">
+        <div class="prop-thumb t3">🏗️</div>
+        <div class="prop-info">
+          <div class="prop-name">Lekki Phase 2 Terrace</div>
+          <div class="prop-loc">Lekki · 3 bed · 2 bath</div>
+        </div>
+        <div>
+          <div class="prop-price">₦58M</div>
+          <div style="margin-top:4px"><span class="prop-badge badge-sale">New Build</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-tabs">
+    <button class="tab active" onclick="setTab(this)">Buy</button>
+    <button class="tab" onclick="setTab(this)">Rent</button>
+    <button class="tab" onclick="setTab(this)">Sell</button>
+    <button class="tab" onclick="setTab(this)">New Homes</button>
+  </div>
+  <div class="search-bar">
+    <div class="search-seg">
+      <div class="seg-label">Location</div>
+      <input class="seg-input" placeholder="City, neighbourhood or area…" />
+    </div>
+    <div class="search-seg">
+      <div class="seg-label">Property Type</div>
+      <select class="seg-input">
+        <option>Any type</option>
+        <option>Apartment</option>
+        <option>House</option>
+        <option>Duplex</option>
+        <option>Bungalow</option>
+        <option>Commercial</option>
+      </select>
+    </div>
+    <div class="search-seg">
+      <div class="seg-label">Bedrooms</div>
+      <select class="seg-input">
+        <option>Any</option>
+        <option>Studio</option>
+        <option>1 Bed</option>
+        <option>2 Beds</option>
+        <option>3 Beds</option>
+        <option>4+ Beds</option>
+      </select>
+    </div>
+    <div class="search-seg">
+      <div class="seg-label">Price Range</div>
+      <select class="seg-input">
+        <option>Any price</option>
+        <option>Up to ₦30M</option>
+        <option>₦30M – ₦80M</option>
+        <option>₦80M – ₦200M</option>
+        <option>₦200M+</option>
+      </select>
+    </div>
+    <button class="search-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </button>
+  </div>
+</div>
+
+<!-- FEATURED LISTINGS -->
+<div class="featured-bg" id="listings">
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">Featured Properties</div>
+      <a href="#" class="section-link">View all listings →</a>
+    </div>
+    <div class="props-grid">
+      <div class="prop-card">
+        <div class="prop-img pi1"><span>🏡</span><span class="prop-tag tag-sale">For Sale</span></div>
+        <div class="prop-body">
+          <div class="prop-price-big">₦120,000,000</div>
+          <div class="prop-title">Luxury Detached House</div>
+          <div class="prop-address">📍 Banana Island, Lagos</div>
+          <div class="prop-features">
+            <div class="feat">🛏 5 Beds</div>
+            <div class="feat">🚿 4 Baths</div>
+            <div class="feat">📐 450 m²</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-img pi2"><span>🏢</span><span class="prop-tag tag-rent">For Rent</span></div>
+        <div class="prop-body">
+          <div class="prop-price-big">₦280,000<span style="font-size:14px;font-weight:400;color:var(--muted)">/mo</span></div>
+          <div class="prop-title">Modern Studio Apartment</div>
+          <div class="prop-address">📍 Victoria Island, Lagos</div>
+          <div class="prop-features">
+            <div class="feat">🛏 1 Bed</div>
+            <div class="feat">🚿 1 Bath</div>
+            <div class="feat">📐 65 m²</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-img pi3"><span>🏗️</span><span class="prop-tag tag-new">New Build</span></div>
+        <div class="prop-body">
+          <div class="prop-price-big">₦75,000,000</div>
+          <div class="prop-title">3-Bed Terrace Duplex</div>
+          <div class="prop-address">📍 Lekki Phase 1, Lagos</div>
+          <div class="prop-features">
+            <div class="feat">🛏 3 Beds</div>
+            <div class="feat">🚿 3 Baths</div>
+            <div class="feat">📐 210 m²</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-img pi4"><span>🏠</span><span class="prop-tag tag-sale">For Sale</span></div>
+        <div class="prop-body">
+          <div class="prop-price-big">₦45,000,000</div>
+          <div class="prop-title">Semi-Detached Bungalow</div>
+          <div class="prop-address">📍 Magodo Phase 2, Lagos</div>
+          <div class="prop-features">
+            <div class="feat">🛏 4 Beds</div>
+            <div class="feat">🚿 3 Baths</div>
+            <div class="feat">📐 180 m²</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-img pi5"><span>🏙️</span><span class="prop-tag tag-rent">For Rent</span></div>
+        <div class="prop-body">
+          <div class="prop-price-big">₦500,000<span style="font-size:14px;font-weight:400;color:var(--muted)">/mo</span></div>
+          <div class="prop-title">Executive 3-Bed Apartment</div>
+          <div class="prop-address">📍 Eko Atlantic, Lagos</div>
+          <div class="prop-features">
+            <div class="feat">🛏 3 Beds</div>
+            <div class="feat">🚿 3 Baths</div>
+            <div class="feat">📐 145 m²</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-img pi6"><span>🏛️</span><span class="prop-tag tag-new">New Build</span></div>
+        <div class="prop-body">
+          <div class="prop-price-big">₦200,000,000</div>
+          <div class="prop-title">Smart Home Villa</div>
+          <div class="prop-address">📍 Osborne Estate, Ikoyi</div>
+          <div class="prop-features">
+            <div class="feat">🛏 6 Beds</div>
+            <div class="feat">🚿 5 Baths</div>
+            <div class="feat">📐 650 m²</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services-section">
+  <div class="services-inner">
+    <div class="section-head">
+      <div class="section-title">How We Can Help</div>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card">
+        <div class="svc-icon">🔑</div>
+        <div class="svc-title">Buy a Property</div>
+        <div class="svc-desc">Access thousands of verified listings with detailed photos, pricing history, and neighbourhood insights to find your ideal home with confidence.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📋</div>
+        <div class="svc-title">Rent with Ease</div>
+        <div class="svc-desc">From short-stay to long-term leases, find flexible rental options with transparent terms, vetted landlords, and straightforward agreements.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📈</div>
+        <div class="svc-title">Sell Faster</div>
+        <div class="svc-desc">List your property and reach thousands of active buyers. Our expert agents ensure maximum visibility and help you secure the best possible price.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<div style="background:var(--white)">
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">Why Choose EstatePro</div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">✅</div>
+        <div class="why-title">Verified Listings</div>
+        <div class="why-desc">Every property is independently verified for accuracy, legality, and authenticity before going live.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🤝</div>
+        <div class="why-title">Expert Agents</div>
+        <div class="why-desc">Our licensed agents have deep local knowledge and negotiate on your behalf to get the best outcome.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <div class="why-title">Fast Transactions</div>
+        <div class="why-desc">Streamlined documentation and legal support means faster closings — buy or sell in record time.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔒</div>
+        <div class="why-title">Secure & Transparent</div>
+        <div class="why-desc">Full transparency on pricing, fees, and contracts. Your investment is always protected with us.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENTS -->
+<div style="background:var(--offwhite);padding-bottom:3.5rem" id="agents">
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">Our Top Agents</div>
+      <a href="#" class="section-link">Meet the full team →</a>
+    </div>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-avatar">AO</div>
+        <div class="agent-name">Adaeze Okonkwo</div>
+        <div class="agent-role">Senior Residential Agent</div>
+        <div class="agent-count">142 active listings</div>
+        <button class="agent-btn">Contact</button>
+      </div>
+      <div class="agent-card">
+        <div class="agent-avatar">BT</div>
+        <div class="agent-name">Babatunde Taiwo</div>
+        <div class="agent-role">Commercial Specialist</div>
+        <div class="agent-count">98 active listings</div>
+        <button class="agent-btn">Contact</button>
+      </div>
+      <div class="agent-card">
+        <div class="agent-avatar">CM</div>
+        <div class="agent-name">Chidi Mensah</div>
+        <div class="agent-role">Luxury Properties</div>
+        <div class="agent-count">117 active listings</div>
+        <button class="agent-btn">Contact</button>
+      </div>
+      <div class="agent-card">
+        <div class="agent-avatar">FE</div>
+        <div class="agent-name">Fatima Eze</div>
+        <div class="agent-role">New Developments</div>
+        <div class="agent-count">83 active listings</div>
+        <button class="agent-btn">Contact</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="testimonials-inner">
+    <div class="section-head">
+      <div class="section-title">What Our Clients Say</div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"The team at EstatePro made buying my first home an incredibly smooth experience. From search to signing, everything was seamless and transparent."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">KA</div>
+          <div>
+            <div class="author-name">Kemi Adeyemi</div>
+            <div class="author-detail">Homebuyer · Lekki, Lagos</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"I listed my duplex with EstatePro and had serious offers within two weeks. Professional, responsive, and genuinely results-driven."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">TO</div>
+          <div>
+            <div class="author-name">Tunde Olatunji</div>
+            <div class="author-detail">Property Seller · Ikeja, Lagos</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"Renting through EstatePro was stress-free. My agent Adaeze found me the perfect apartment in Victoria Island within days of my enquiry."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">NC</div>
+          <div>
+            <div class="author-name">Ngozi Chukwu</div>
+            <div class="author-detail">Tenant · Victoria Island, Lagos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-wrapper" id="cta" style="padding-top:3.5rem">
+  <div class="cta-banner">
+    <div>
+      <div class="cta-h">Ready to Find Your Dream Home?</div>
+      <div class="cta-p">Connect with a trusted EstatePro agent today. No obligation — just expert guidance tailored to your property goals.</div>
+    </div>
+    <div class="cta-btns">
+      <button class="btn-primary">Talk to an Agent</button>
+      <button class="btn-secondary">List a Property</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo footer-logo">Estate<span>Pro</span></div>
+      <div class="footer-tagline" style="margin-top:1rem">Nigeria's most trusted platform for buying, selling, and renting property. Your home journey starts here.</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Properties</div>
+      <a href="#">For Sale</a>
+      <a href="#">For Rent</a>
+      <a href="#">New Developments</a>
+      <a href="#">Commercial</a>
+      <a href="#">Off-Plan</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <a href="#">About Us</a>
+      <a href="#">Our Agents</a>
+      <a href="#">Careers</a>
+      <a href="#">Blog</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Support</div>
+      <a href="#">Help Centre</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 EstatePro Nigeria Ltd. All rights reserved.</div>
+    <div class="footer-social">
+      <button class="social-btn" title="Facebook">f</button>
+      <button class="social-btn" title="Twitter/X">𝕏</button>
+      <button class="social-btn" title="Instagram">📷</button>
+      <button class="social-btn" title="LinkedIn">in</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function setTab(el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
